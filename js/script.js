@@ -62,6 +62,13 @@ function validar(){
     //return false;
 
     //Exibir cada mensagem de validação de acordo com cada comparação:
+    if (txt_email.value === "") {
+    mensagem.innerHTML = "E-mail está vazio";
+} else if (txt_email.value !== txt_confirma.value) {
+    mensagem.innerHTML = "E-mails são diferentes";
+} else {
+    mensagem.innerHTML = "E-mails estão iguais";
+}
     //Se o campo estiver sem texto, Exibir mensagem "[CAMPO] está vazio"
     //Se o campo estiver diferente da repetição, Exibir mensagem "[CAMPO]s são diferentes"
     //Se o campo estiver igual a comparação, Exibir mensagem "[CAMPO]s estão iguais"
@@ -84,6 +91,7 @@ function adicionar_apelido(){
     p_lista_apelido.style.display = "block";
 
     //no final, limpar a caixa de texto de apelido
+    txt_apelido.value = "";
 }
 
 function gravar_apelido(){
@@ -91,7 +99,10 @@ function gravar_apelido(){
 
     cookieStore.set("apelido_favorito", apelido);
     //Gravar todos campos do formulário no cookie
+cookieStore.set("apelido_favorito", "true");
     //Gravar lista de apelidos no cookie
+    let todos_apelidos = Array.from(document.querySelectorAll("#lst_apelido option")).map(opt => opt.text).join(",");
+cookieStore.set("lista_apelidos", todos_apelidos);
 }
 
 async function carregar_apelido(){
@@ -107,4 +118,14 @@ async function carregar_apelido(){
     lst_apelido.appendChild(novo_apelido);
 
     //Carregar lista de apelido
+    let listaSalva = await cookieStore.get("lista_apelidos");
+if (listaSalva) {
+    let itens = listaSalva.value.split(",");
+    let lst_apelido = document.querySelector("#lst_apelido");
+    itens.forEach(item => {
+        let novo_apelido = document.createElement("option");
+        novo_apelido.textContent = item;
+        lst_apelido.appendChild(novo_apelido);
+    });
+}
 }
